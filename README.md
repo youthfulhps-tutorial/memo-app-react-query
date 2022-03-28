@@ -47,3 +47,31 @@ ReactDOM.render(
   document.getElementById("root")
 );
 ```
+
+## 쿼리
+
+쿼리는 고유키에 연결된 비동기 데이터 소스 단위이다. 서버에서 데이터를 가져오기 위한 모든 Promise 기반 메서드(주로 GET)에 대해 사용이 가능하다.
+
+쿼리는 `fresh`, `fetching`, `stale`, `inactive`를 가지는데,
+
+- `fresh`, active 상태의 시작을 뜻하고, 호출 이후 `stale`로 변경되는 것이 기본이다. staleTime으로 `fresh` 상태 유지 시간을 설정할 수 있다. 만약 쿼리의 상태가 `fresh`하다면 새롭게 리패칭을 시도하지 않고 기존의 데이터를 반환한다.
+
+- `fetching`, 요청을 수행하고 있는 쿼리의 상태를 뜻한다.
+
+- `stale`, 이미 요청을 완료한 쿼리의 상태를 뜻한다. `stale` 상태의 쿼리를 마운트한다면, 캐싱된 데이터를 우선적으로 반환하고, 리패칭을 시도한다.
+  (next의 isr처럼 캐싱된 데이터를 우선 반환하고, 이 시점에서 캐싱된 데이터를 무효화(invalidate)하는 캐시 정책을 통해 최신화된 데이터로 캐싱 데이터를 새롭게 동기화하는 듯 하다.)
+
+- `inactive`, active 인스턴스가 하나도 없는 쿼리의 상태를 뜻한다. cacheTime 동안 캐싱된 데이터는 유지된다. (쿼리 인스턴스가 존재하는 컴포넌트가 리랜더링되면 이전 랜더링에 사용된 쿼리들은 inactive 상태가 되는 듯하다.)
+
+## API
+
+### useQuery
+
+위에서 설명한 쿼리를 다루는 기본적인 API는 [useQuery](https://react-query.tanstack.com/reference/useQuery#_top)이다. 고유한 키값과 프로미스를 반환하는 함수를 파라미터로 받고, 추가적으로 cacheTime, refetchOnWindowFocus과 같은 다양한 설정값을 받는다.
+
+```ts
+const { isLoading, isError, data, error } = useQuery<
+  AxiosResponse<Memo[]>,
+  AxiosError
+>("memos", getMemos, { keepPreviousData: true });
+```

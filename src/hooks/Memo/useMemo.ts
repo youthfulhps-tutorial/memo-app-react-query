@@ -6,7 +6,7 @@ const useMemo = () => {
   const { isLoading, isError, data, error } = useQuery<
     AxiosResponse<Memo[]>,
     AxiosError
-  >("memos", getMemos);
+  >("memos", getMemos, { keepPreviousData: true });
 
   return { isLoading, isError, memos: data && data.data, error };
 };
