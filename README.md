@@ -1,7 +1,5 @@
 # Simple memo app w/ react-query
 
-react-query는 서버의 값을 클라이언트
-
 react-query는 서버의 값을 클라이언트에 가져오거나, 캐싱, 값 업데이트 및 동기화, 에러핸들링 등 비동기 과정의 과정을 리엑트 앱에게 책임지게 하는 라이브러리이다.
 
 비동기 요청, 결과에 대한 무결함을 제공하고 뷰에서 데이터를 필요로 할 때 최신화된 데이터를 참조할 수 있도록 보장한다.
@@ -183,3 +181,9 @@ return (
   </Suspense>
 );
 ```
+
+## Reference
+
+[React-Query 살펴보기](https://maxkim-j.github.io/posts/react-query-preview)
+
+[기억보다 기록을, react-query](https://kyounghwan01.github.io/blog/React/react-query/basic/#update%E1%84%92%E1%85%AE%E1%84%8B%E1%85%A6-get-%E1%84%83%E1%85%A1%E1%84%89%E1%85%B5-%E1%84%89%E1%85%B5%E1%86%AF%E1%84%92%E1%85%A2%E1%86%BC)
