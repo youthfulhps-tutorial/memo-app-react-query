@@ -75,3 +75,46 @@ const { isLoading, isError, data, error } = useQuery<
   AxiosError
 >("memos", getMemos, { keepPreviousData: true });
 ```
+
+추가적으로 전달하는 몇 가지 옵션의 예시는 다음과 같다.
+
+```ts
+const { isLoading, isError, data, error } = useQuery<
+  AxiosResponse<Memo[]>,
+  AxiosError
+>("memos", getMemos, {
+  retry: 0, //패칭 실패 시, 리패칭 시도 횟수
+  refetchOnWindowFocus: false, //윈도우에 다시 포커싱되었을 때 리패칭을 시도할 것인지에 대한 여부
+  onSuccess: (data) => {
+    //패칭 성공 시, 호출
+    console.log(data);
+  },
+  onError: (e) => {
+    //패칭 실패 시, 호출
+    throw new Error("에러 발생");
+  },
+});
+```
+
+### useQueries
+
+만약, 여러 쿼리를 사용하여 처리해주어야 하는 경우가 있다 (마치, Promise.all 처럼). 이럴 때는 `useQueries`를 사용하면 병렬적으로 useQuery를 하나로 묶어 처리할 수 있다.
+
+```ts
+const memoListQuery = useQuery<AxiosResponse<Memo[]>, AxiosError>(
+  "memos",
+  getMemos
+);
+
+const labelListQuery = useQuery<AxiosResponse<Label[]>, AxiosError>(
+  "labels",
+  getLabels
+);
+```
+
+```ts
+const result = useQueries([
+  { queryKey: "memos", queryFn: () => getMemos() },
+  { queryKey: "labels", queryFn: () => getLabels() },
+]);
+```
