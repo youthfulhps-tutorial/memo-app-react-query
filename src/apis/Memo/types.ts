@@ -5,3 +5,8 @@ export interface Memo {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PostMemoPayload {
+  title: string;
+  content: string;
+}
