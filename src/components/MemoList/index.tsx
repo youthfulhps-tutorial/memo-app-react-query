@@ -1,7 +1,7 @@
 import React from "react";
 import Memo from "./MemoItem";
 import styled from "styled-components";
-import useMemo from "../../hooks/Memo/useMemo";
+import useMemoList from "../../hooks/Memo/useMemoList";
 
 const StyledMemoList = styled.div`
   width: 100%;
@@ -11,7 +11,7 @@ const StyledMemoList = styled.div`
 `;
 
 function MemoList() {
-  const { isError, isLoading, memos } = useMemo();
+  const { isError, isLoading, memos } = useMemoList();
 
   if (isLoading) return <div>로딩중</div>;
   if (isError) return <div>에러</div>;
