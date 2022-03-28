@@ -146,3 +146,40 @@ const submitMemo = () => {
   memoMutation.mutate({ title, content });
 };
 ```
+
+## With React Suspense
+
+비동기적인 동작에 대한 선언적인 처리를 해주기 위해 react-query는 리엑트의 [Suspense](https://ko.reactjs.org/docs/concurrent-mode-suspense.html)와 함께 사용할 수 있다.
+아래와 같이 defaultOption의 `suspense`값을 true로 설정해주면 모든 쿼리에 대해 suspense 효과가 추가되고,
+각각의 쿼리에 부과할 수도 있다.
+
+```ts
+//index.tsx
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      suspense: true,
+    },
+  },
+});
+
+const { isLoading, isError, data, error } = useQuery<
+  AxiosResponse<Memo[]>,
+  AxiosError
+>("memos", getMemos, { suspense: true });
+```
+
+```tsx
+return (
+  <Suspense fallback={<div>로딩중...</div>}>
+    <ErrorBoundary fallback={<div>에러 발생 :(</div>}>
+      <StyledMemoList>
+        {data?.data.map((memo) => (
+          <MemoItem key={memo.id} memo={memo} />
+        ))}
+      </StyledMemoList>
+    </ErrorBoundary>
+  </Suspense>
+);
+```
