@@ -25,3 +25,25 @@ react-query는 서버의 값을 클라이언트에 가져오거나, 캐싱, 값 
 ```
 ~$ yarn add react-query
 ```
+
+## 종속성 주입
+
+프로젝트의 최상단에서 `queryClient`에 대한 종속성을 이하 컴포넌트에게 주입한다. 이러한 컨텍스트는 앱에서 비동기 처리를 담당하게끔 background 계층이 된다.
+
+```tsx
+...
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
+
+ReactDOM.render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen />
+      <App />
+    </QueryClientProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+```
