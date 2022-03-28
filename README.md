@@ -1,46 +1,27 @@
-# Getting Started with Create React App
+# Simple memo app w/ react-query
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+react-query는 서버의 값을 클라이언트
 
-## Available Scripts
+react-query는 서버의 값을 클라이언트에 가져오거나, 캐싱, 값 업데이트 및 동기화, 에러핸들링 등 비동기 과정의 과정을 리엑트 앱에게 책임지게 하는 라이브러리이다.
 
-In the project directory, you can run:
+비동기 요청, 결과에 대한 무결함을 제공하고 뷰에서 데이터를 필요로 할 때 최신화된 데이터를 참조할 수 있도록 보장한다.
 
-### `yarn start`
+클라이언트에서 서버 상태를 참조하기 위해 클라이언트 스토어에 상태를 최신화하고 유지하는데, 클라이언트 스토어를 구현하기 위해 많은 리소스를 투자해야 하지만, 그만큼의 상태의 무결함, 서버 상태와의 동기화를 기대하기 힘든 경우가 빈번하다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## react-query에서의 state
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+서버와 클라이언트 상태는 구분되어야 하고 서로 다른 방식으로 다루어져야 한다는 개념하에 `global state`라는 용어를 사용하지 않고, client, server state로 구분짓는다.
 
-### `yarn test`
+`server state`는 서버에서 가져오는 데이터들도 하나의 상태로 보며, 세션간 지속되는, 비동기적인 데이터를 말한다. 여러 클라이언트에 의해 수정될 수 있으며 클라이언트에서는 서버 데이터의 스냅샷을 사용하기 때문에 클라이언트에서 보이는 서버 데이터는 항상 최신이라는 보장이 없다. 가령, 비동기 요청으로 전달받는 백엔드 DB에 저장되어 있는 데이터이다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`client state`는 세션간 지속되고, 진행되는 동기적인 데이터이며 클라이언트가 소유하고 있고, 랜더링에 반영하기 위해 항상 최신 데이터로 업데이트한다. 가령, 리엑트 컴포넌트의 state나 동기적으로 저장되는 클라이언트 스토어의 데이터이다.
 
-### `yarn build`
+## 장점
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+프론트엔드 개발자로서 감당해야 하는 데이터 최신화 및 동기화, 캐싱, 중복 요청 제거, 비동기 과정의 선언적인 관리를 react query에게 위임하여 비지니스 로직에 집중할 수 있게 해주며, 각각의 선언적인 쿼리의 옵션을 부여할 수 있다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 설치
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+~$ yarn add react-query
+```
