@@ -61,13 +61,13 @@ ReactDOM.render(
 - `stale`, 이미 요청을 완료한 쿼리의 상태를 뜻한다. `stale` 상태의 쿼리를 마운트한다면, 캐싱된 데이터를 우선적으로 반환하고, 리패칭을 시도한다.
   (next의 isr처럼 캐싱된 데이터를 우선 반환하고, 이 시점에서 캐싱된 데이터를 무효화(invalidate)하는 캐시 정책을 통해 최신화된 데이터로 캐싱 데이터를 새롭게 동기화하는 듯 하다.)
 
-- `inactive`, active 인스턴스가 하나도 없는 쿼리의 상태를 뜻한다. cacheTime 동안 캐싱된 데이터는 유지된다. (쿼리 인스턴스가 존재하는 컴포넌트가 리랜더링되면 이전 랜더링에 사용된 쿼리들은 inactive 상태가 되는 듯하다.)
+- `inactive`, active 인스턴스가 하나도 없는 쿼리의 상태를 뜻한다. `cacheTime` 동안 캐싱된 데이터는 유지된다. (쿼리 인스턴스가 존재하는 컴포넌트가 리랜더링되면 이전 랜더링에 사용된 쿼리들은 inactive 상태가 되는 듯하다.)
 
 ## API
 
 ### useQuery
 
-위에서 설명한 쿼리를 다루는 기본적인 API는 [useQuery](https://react-query.tanstack.com/reference/useQuery#_top)이다. 고유한 키값과 프로미스를 반환하는 함수를 파라미터로 받고, 추가적으로 cacheTime, refetchOnWindowFocus과 같은 다양한 설정값을 받는다.
+위에서 설명한 쿼리를 다루는 기본적인 API는 [useQuery](https://react-query.tanstack.com/reference/useQuery#_top)이다. 고유한 키값과 프로미스를 반환하는 함수를 파라미터로 받고, 추가적으로 `cacheTime`, `refetchOnWindowFocus`과 같은 다양한 설정값을 받는다.
 
 ```ts
 const { isLoading, isError, data, error } = useQuery<
@@ -98,7 +98,7 @@ const { isLoading, isError, data, error } = useQuery<
 
 ### useQueries
 
-만약, 여러 쿼리를 사용하여 처리해주어야 하는 경우가 있다 (마치, Promise.all 처럼). 이럴 때는 `useQueries`를 사용하면 병렬적으로 useQuery를 하나로 묶어 처리할 수 있다.
+만약, 여러 쿼리를 사용하여 처리해주어야 하는 경우가 있다 (마치, Promise.all 처럼). 이럴 때는 `useQueries`를 사용하면 병렬적으로 `useQuery`를 하나로 묶어 처리할 수 있다.
 
 ```ts
 const memoListQuery = useQuery<AxiosResponse<Memo[]>, AxiosError>(
@@ -117,4 +117,32 @@ const result = useQueries([
   { queryKey: "memos", queryFn: () => getMemos() },
   { queryKey: "labels", queryFn: () => getLabels() },
 ]);
+```
+
+### useMutation
+
+[useMutation](https://react-query.tanstack.com/reference/useMutation)은 서버 자원의 변경이 가해지는 액션 (create, update, delete)를 처리할 때 사용한다. Promise를 반환하는 요청 메서드를 파라미터로 전달하고, 부가적인 옵션을 전달한다. `useMutation`의 반환 객체의 `mutate` 메서드를 호출하면 요청 메서드를 호출한다.
+
+`useMutation`의 `mutate` 메서드의 결과에 대한 상태에 따라 `onMutate`, `onError`, `onSuccess`, `onSettled`과 같은 메서드를 설정해줄 수 있다.
+
+```ts
+import { useMutation, useQueryClient } from "react-query";
+
+const memoMutation = useMutation(
+  (newMemo: PostMemoPayload) => postMemo(newMemo),
+  {
+    onError: (error, variable, context) => {
+      console.log(error);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries("memos");
+      setTitle("");
+      setContent("");
+    },
+  }
+);
+
+const submitMemo = () => {
+  memoMutation.mutate({ title, content });
+};
 ```
